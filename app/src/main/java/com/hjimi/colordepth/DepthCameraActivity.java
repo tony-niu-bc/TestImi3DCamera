@@ -281,7 +281,6 @@ public class DepthCameraActivity extends AppCompatActivity
                      idx++)
                 {
                     byte colorA = 0;
-                    // allocateDirect 的 ByteBuffer 是不支持 array 方法的！
                     byte colorR = bbRGB88.get(3 * idx);
                     byte colorG = bbRGB88.get(3 * idx + 1);
                     byte colorB = bbRGB88.get(3 * idx + 2);
@@ -408,21 +407,7 @@ public class DepthCameraActivity extends AppCompatActivity
                 {
                     bfPointCloud.position(0);
 
-//                    byte[] baPointCloud = new byte[bfPointCloud.capacity()];
-//
-//                    Log.i("SimpleViewer",
-//                          "bfPointCloud.capacity() = " + bfPointCloud.capacity());
-//
-//                    for(int idx = 0;
-//                        idx < bfPointCloud.capacity();
-//                        idx++)
-//                    {
-//                        baPointCloud[idx] = bfPointCloud.get(idx);
-//                    }
-
                     try {
-                        // allocateDirect 的 ByteBuffer 是不支持 array 方法的！
-                        //fos.write(baPointCloud);
                         Log.i("DepthCameraActivity",
                               "bfPointCloud.array().length = " + Integer.toString(bfPointCloud.array().length));
 
