@@ -1,0 +1,50 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+<!--    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="color_margintop">30dp</dimen>
+    <dimen name="color_width">960dp</dimen>
+    <dimen name="color_height">720dp</dimen>
+    <dimen name="color_padding">15dp</dimen>
+    <dimen name="depth_margintop">30dp</dimen>
+    <dimen name="depth_marginleft">200dp</dimen>
+    <dimen name="depth_width">640dp</dimen>
+    <dimen name="depth_height">480dp</dimen>
+    <dimen name="depth_padding">15dp</dimen>
+    <dimen name="setting_marginleft">200dp</dimen>
+    <dimen name="setting_margintop">35dp</dimen>
+    <dimen name="setting_width">375dp</dimen>
+    <dimen name="settings_height">200dp</dimen>
+
+    <dimen name="color16_12width">672dp</dimen>
+    <dimen name="color16_12height">504dp</dimen>
+    <dimen name="color16_9width">768dp</dimen>
+    <dimen name="color16_9height">500dp</dimen>
+    <dimen name="depth16_12width">480dp</dimen>
+    <dimen name="depth16_12height">360dp</dimen>-->
+
+    <dimen name="activity_horizontal_margin">10.7dp</dimen>
+    <dimen name="activity_vertical_margin">10.7dp</dimen>
+    <dimen name="color_margintop">20dp</dimen>
+    <dimen name="color_width">640dp</dimen>
+    <dimen name="color_height">480dp</dimen>
+    <dimen name="color_padding">10dp</dimen>
+    <dimen name="depth_margintop">20dp</dimen>
+    <dimen name="depth_marginleft">133dp</dimen>
+    <dimen name="depth_width">427dp</dimen>
+    <dimen name="depth_height">320dp</dimen>
+    <dimen name="depth_padding">10dp</dimen>
+    <dimen name="setting_marginleft">133dp</dimen>
+    <dimen name="setting_margintop">23dp</dimen>
+    <dimen name="setting_width">250dp</dimen>
+    <dimen name="activity_ll_marginleft">80dp</dimen>
+
+    <dimen name="color16_12width">448dp</dimen>
+    <dimen name="color16_12height">336dp</dimen>
+    <dimen name="color16_9width">512dp</dimen>
+    <dimen name="color16_9height">335dp</dimen>
+    <dimen name="depth16_12width">320dp</dimen>
+    <dimen name="depth16_12height">240dp</dimen>
+
+
+</resources>

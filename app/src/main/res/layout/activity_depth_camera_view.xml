@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FF999999"
+    tools:context=".DepthCameraActivity"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="true"
+        >
+
+        <Button
+            android:id="@+id/button_contrast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="contrast"
+            android:textColor="#ff0000"
+            android:textSize="16dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_show_attrs"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="#0000ff"
+            android:textSize="16sp"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:id="@+id/button_Exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EXIT"
+            android:textColor="#ff0000"
+            android:textSize="16sp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CCCCCC"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/color_padding"
+        >
+
+        <com.hjimi.colordepth.GLPanel
+            android:id="@+id/sv_depth_view"
+            android:layout_width="640px"
+            android:layout_height="480px"
+            />
+
+        <Button
+            android:id="@+id/button_take_a_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="take a photo"
+            android:textColor="#0000ff"
+            android:textSize="16sp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
