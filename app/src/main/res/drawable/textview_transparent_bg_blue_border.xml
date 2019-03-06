@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle"
+    >
+
+   <!-- 全透明：#00000000 -->
+   <!-- 半透明：#80000000 -->
+   <!-- 不透明：#FF000000 -->
+   <!-- 白色半透明：#80FFFFFF -->
+   <!-- 红色30%透明：#4Dca0d0d -->
+   <solid 
+       android:color="#00000000"
+       />
+   
+   <stroke
+       android:width="2dp"
+       android:color="#4fa5d5"
+       />
+
+</shape>

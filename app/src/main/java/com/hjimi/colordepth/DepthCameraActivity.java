@@ -242,10 +242,10 @@ public class DepthCameraActivity extends AppCompatActivity
                 }
             }
 
-            ByteBuffer bbRGB88 = Utils.depth2RGB888(nextFrame, true, false);
+            ByteBuffer bbRGB888 = Utils.depth2RGB888(nextFrame, true, false);
 
             mGLDepthPanel.paint(null,
-                                bbRGB88,
+                                bbRGB888,
                                 nextFrame.getWidth(),
                                 nextFrame.getHeight());
 
@@ -256,77 +256,6 @@ public class DepthCameraActivity extends AppCompatActivity
             bfPointCloud.order(ByteOrder.nativeOrder());
             FloatBuffer fbPointCloud = bfPointCloud.asFloatBuffer();
             fbPointCloud.position(0);
-
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_");
-            String strDateTime = formatter.format(new Date(System.currentTimeMillis()));
-            String strFileName = "/sdcard/Download/imidepth/" +
-                                 strDateTime +
-                                 Long.toString(System.currentTimeMillis());
-
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(strFileName + ".png");
-            }
-            catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            if (null != fos)
-            {
-                // ARGB 字节缓冲区
-                int[] iaARGB = new int[width * height];
-
-                for (int idx = 0;
-                     idx < iaARGB.length;
-                     idx++)
-                {
-                    byte colorA = 0;
-                    byte colorR = bbRGB88.get(3 * idx);
-                    byte colorG = bbRGB88.get(3 * idx + 1);
-                    byte colorB = bbRGB88.get(3 * idx + 2);
-                    iaARGB[idx] = (colorA << 24) |
-                                  (colorR << 16) |
-                                  (colorG <<  8) |
-                                  colorB;
-                }
-
-                Bitmap bmp = Bitmap.createBitmap(iaARGB,
-                                                 width,
-                                                 height,
-                                                 Bitmap.Config.ARGB_8888);
-                if (null != bmp)
-                {
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
-
-                    try {
-                        fos.flush();
-                    }
-                    catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        fos.close();
-                    }
-                    catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    fos = null;
-
-                    if (!bmp.isRecycled()) {
-                        // 回收图片所占的内存
-                        bmp.recycle();
-                        bmp = null;
-
-                        //提醒系统及时回收
-                        System.gc();
-                    }
-
-                    Log.i("DepthCameraActivity",
-                          strFileName + ".png was generated!");
-                }
-            }
 
             int iResult = mDevice.imiConvertDepthToPointCloud(nextFrame,
                                                               0,
@@ -340,7 +269,115 @@ public class DepthCameraActivity extends AppCompatActivity
 
             if (0 == iResult)
             {
+                bfPointCloud.position(0);
                 fbPointCloud.position(0);
+
+                // ARGB 字节缓冲区
+                int[] iaARGB = new int[200 * 200]; // 中心框的大小，int四字节代表ARGB;
+
+                int rowStart = (height - 200) / 2;
+                int colStart = (width  - 200) / 2;
+
+                StringBuilder sbFloatInfo = new StringBuilder();
+
+                byte[] baFaceFloatDepth = new byte[200 * 200 * 3 * 4]; // 宽，高，XYZ三字节，float四字节
+
+                int idxARGB = 0;
+                int idxFaceFloatDepth = 0;
+
+                for (int idxRow = 0;
+                         idxRow < 200;
+                         idxRow++)
+                {
+                    int cutPixelPos = (rowStart + idxRow) * width;
+
+                    for (int idxCol = 0;
+                             idxCol < 200;
+                             idxCol++)
+                    {
+                        cutPixelPos += colStart + idxCol;
+
+                        byte colorA = Integer.valueOf(0xff).byteValue();
+                        byte colorR = bbRGB888.get(3 * cutPixelPos);
+                        byte colorG = bbRGB888.get(3 * cutPixelPos + 1);
+                        byte colorB = bbRGB888.get(3 * cutPixelPos + 2);
+
+                        iaARGB[idxARGB++] = (colorA << 24) |
+                                            (colorR << 16) |
+                                            (colorG << 8) |
+                                            colorB;
+
+                        sbFloatInfo.append(Float.toString(fbPointCloud.get(3 * cutPixelPos)));
+                        sbFloatInfo.append(" ");
+                        sbFloatInfo.append(Float.toString(fbPointCloud.get(3 * cutPixelPos + 1)));
+                        sbFloatInfo.append(" ");
+                        sbFloatInfo.append(Float.toString(fbPointCloud.get(3 * cutPixelPos + 2)));
+                        sbFloatInfo.append(" ");
+
+                        for (int idx = 0;
+                                 idx < 12; // X, Y, Z 三个浮点数，共计十二个字节
+                                 idx++)
+                        {
+                            baFaceFloatDepth[idxFaceFloatDepth++] = bfPointCloud.get(12 * cutPixelPos + idx);
+                        }
+                    }
+
+                    sbFloatInfo.append("\n");
+                }
+
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_");
+                String strDateTime = formatter.format(new Date(System.currentTimeMillis()));
+                String strFileName = "/sdcard/Download/imidepth/" +
+                                     strDateTime +
+                                     Long.toString(System.currentTimeMillis());
+
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(strFileName + ".png");
+                }
+                catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                if (null != fos)
+                {
+                    Bitmap bmp = Bitmap.createBitmap(iaARGB,
+                            width,
+                            height,
+                            Bitmap.Config.ARGB_8888);
+                    if (null != bmp)
+                    {
+                        bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+
+                        try {
+                            fos.flush();
+                        }
+                        catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            fos.close();
+                        }
+                        catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        fos = null;
+
+                        if (!bmp.isRecycled()) {
+                            // 回收图片所占的内存
+                            bmp.recycle();
+                            bmp = null;
+
+                            //提醒系统及时回收
+                            System.gc();
+                        }
+
+                        Log.i("DepthCameraActivity",
+                                strFileName + ".png was generated!");
+                    }
+                }
 
                 try {
                     fos = new FileOutputStream(strFileName + ".txt");
@@ -351,19 +388,8 @@ public class DepthCameraActivity extends AppCompatActivity
 
                 if (null != fos)
                 {
-                    StringBuilder sbFloatInfo = new StringBuilder(Float.toString(fbPointCloud.get(0)));
-                    sbFloatInfo.append("\n");
-
                     Log.i("DepthCameraActivity",
                           "fbPointCloud.capacity() = " + Integer.toString(fbPointCloud.capacity()));
-
-                    for (int idx = 1;
-                             idx < fbPointCloud.capacity();
-                             idx++)
-                    {
-                        sbFloatInfo.append(Float.toString(fbPointCloud.get(idx)));
-                        sbFloatInfo.append("\n");
-                    }
 
                     Log.i("DepthCameraActivity",
                           "sbFloatInfo.toString().getBytes().length = " +
@@ -405,13 +431,11 @@ public class DepthCameraActivity extends AppCompatActivity
 
                 if (null != fos)
                 {
-                    bfPointCloud.position(0);
-
                     try {
                         Log.i("DepthCameraActivity",
-                              "bfPointCloud.array().length = " + Integer.toString(bfPointCloud.array().length));
+                              "baFaceFloatDepth.length = " + Integer.toString(baFaceFloatDepth.length));
 
-                        fos.write(bfPointCloud.array());
+                        fos.write(baFaceFloatDepth);
                     }
                     catch (IOException e) {
                         e.printStackTrace();
