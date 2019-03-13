@@ -232,7 +232,7 @@ public class DepthCameraActivity extends AppCompatActivity
         // bmp文件头
         byte[] baBmpFileHeader = new byte[14];
 
-        // 2bytes - 说明文件的类型，该值必需是0x4D42，也就是字符'BM'，否则表示根本不是BMP
+        // 2bytes - 说明文件的类型，该值必需是 0x42 0x4D ，也就是字符'BM'，否则表示根本不是BMP
         baBmpFileHeader[0]  = 'B';
         baBmpFileHeader[1]  = 'M';
 
@@ -361,7 +361,17 @@ public class DepthCameraActivity extends AppCompatActivity
 
         int idxRGB = 0;
 
+        // RGB24 字节缓冲区
+        byte[] baRGB24 = new byte[iWidth * iHeight * 3];
+
         bbRGB888.position(0);
+
+        for (int idx = 0;
+                 idx < baRGB24.length;
+                 idx++)
+        {
+            baRGB24[idx] = bbRGB888.get(idx);
+        }
 
         for (int idxRow = 0;
                  idxRow < 200;
@@ -373,11 +383,11 @@ public class DepthCameraActivity extends AppCompatActivity
                      idxCol < 200;
                      idxCol++)
             {
-                cutPixelPos += idxCol;
+                cutPixelPos++;
 
-                baPatchRGB24[idxRGB++] = bbRGB888.get(3 * cutPixelPos);
-                baPatchRGB24[idxRGB++] = bbRGB888.get(3 * cutPixelPos + 1);
-                baPatchRGB24[idxRGB++] = bbRGB888.get(3 * cutPixelPos + 2);
+                baPatchRGB24[idxRGB++] = baRGB24[(3 * cutPixelPos)];
+                baPatchRGB24[idxRGB++] = baRGB24[(3 * cutPixelPos) + 1];
+                baPatchRGB24[idxRGB++] = baRGB24[(3 * cutPixelPos) + 2];
             }
         }
 
